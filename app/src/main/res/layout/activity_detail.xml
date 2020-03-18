@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_original_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/movie_title_bg_color"
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingTop="@dimen/title_text_padding_vertical"
+        android:paddingRight="@dimen/default_padding"
+        android:paddingBottom="@dimen/title_text_padding_vertical"
+        android:textColor="@color/title_text_color"
+        android:textSize="@dimen/title_text_size"
+        tools:text="Movie Title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/detail_info_padding_horizontal"
+        android:layout_marginTop="@dimen/default_padding"
+        android:layout_marginRight="@dimen/detail_info_padding_horizontal"
+        android:layout_marginBottom="@dimen/default_padding"
+        android:orientation="horizontal">
+
+        <include
+            android:id="@+id/movie_thumbnail"
+            layout="@layout/movie_grid_item"
+            android:layout_width="@dimen/thumbnail_width"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_padding"
+            android:layout_marginLeft="@dimen/default_padding"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_released_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/detail_info_text_padding"
+                android:textSize="@dimen/released_year_text_size"
+                tools:text="2020" />
+
+            <TextView
+                android:id="@+id/tv_vote_average"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/detail_info_text_padding"
+                android:textSize="@dimen/vote_average_text_size"
+                tools:text="8/10" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_overview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_padding"
+        tools:text="Movie Overview" />
+</LinearLayout>

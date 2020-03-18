@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+
+    <string name="pop_movies">Pop Movies</string>
+    <string name="movie_detail">Movie Detail</string>
+
+    <string name="action_refresh">Refresh</string>
+    <string name="action_sort_by">Sort By</string>
+
+    <string name="most_popular">Most popular</string>
+    <string name="highest_rated">Highest rated</string>
+
+    <string name="empty_message">No movie data.</string>
+
+    <string name="ok">OK</string>
+</resources>
