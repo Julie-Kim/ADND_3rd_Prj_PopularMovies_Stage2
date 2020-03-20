@@ -12,4 +12,6 @@
     <dimen name="detail_info_text_padding">8dp</dimen>
     <dimen name="released_year_text_size">22sp</dimen>
     <dimen name="vote_average_text_size">18sp</dimen>
+    <dimen name="videos_text_size">18sp</dimen>
+    <dimen name="video_list_item_padding_left">30dp</dimen>
 </resources>

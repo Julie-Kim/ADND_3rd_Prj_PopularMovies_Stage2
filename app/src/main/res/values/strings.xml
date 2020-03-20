@@ -13,4 +13,6 @@
     <string name="empty_message">No movie data.</string>
 
     <string name="ok">OK</string>
+
+    <string name="videos">Videos:</string>
 </resources>

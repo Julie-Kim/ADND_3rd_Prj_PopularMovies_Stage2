@@ -20,6 +20,7 @@ import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.utilities.MovieJsonUtils;
 import com.udacity.popularmovies.utilities.NetworkUtils;
 import com.udacity.popularmovies.utilities.PreferenceUtils;
+import com.udacity.popularmovies.utilities.UrlUtils;
 
 import java.lang.ref.WeakReference;
 import java.net.URL;
@@ -64,10 +65,10 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     private void loadMovieData() {
         showOrHideMovieData(true);
 
-        String softBy = NetworkUtils.getSoftByParam(this);
-        Log.d(TAG, "loadMovieData() softBy " + softBy);
+        String sortBy = UrlUtils.getSortByParam(this);
+        Log.d(TAG, "loadMovieData() sortBy " + sortBy);
 
-        new FetchMovieDataTask(this).execute(softBy);
+        new FetchMovieDataTask(this).execute(sortBy);
     }
 
     private void showOrHideMovieData(boolean show) {
@@ -130,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
                 return null;
             }
 
-            URL movieRequestUrl = NetworkUtils.buildUrl(sortBy);
+            URL movieRequestUrl = UrlUtils.buildUrl(UrlUtils.GET_MOVIE, sortBy);
 
             String movieJsonResponse = NetworkUtils.getJsonResponse(movieRequestUrl);
             if (movieJsonResponse != null) {
@@ -194,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     }
 
     private void showSortBySelectionDialog() {
-        int checkedItem = PreferenceUtils.getSoftBySettingValue(this);
+        int checkedItem = PreferenceUtils.getSortBySettingValue(this);
         Log.d(TAG, "showSortBySelectionDialog() checked item: " + checkedItem);
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
@@ -203,7 +204,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
                         checkedItem,
                         (dialog1, which) -> {
                             Log.d(TAG, "showSortBySelectionDialog() clicked item: " + which);
-                            PreferenceUtils.setSoftBySettingValue(MainActivity.this, which);
+                            PreferenceUtils.setSortBySettingValue(MainActivity.this, which);
                         })
                 .setPositiveButton(R.string.ok, (dialog12, which) -> loadMovieData()).create().show();
     }

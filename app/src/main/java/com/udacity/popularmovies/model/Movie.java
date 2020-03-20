@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 public class Movie implements Parcelable {
 
+    private String mId;
     private String mTitle;
     private String mOriginalTitle;
     private String mPosterPath;
@@ -14,7 +15,8 @@ public class Movie implements Parcelable {
     private float mVoteAverage;    //user rating
     private String mReleaseDate;
 
-    public Movie(String title, String originalTitle, String posterPath, String overview, float voteAverage, String releaseDate) {
+    public Movie(String id, String title, String originalTitle, String posterPath, String overview, float voteAverage, String releaseDate) {
+        mId = id;
         mTitle = title;
         mOriginalTitle = originalTitle;
         mPosterPath = posterPath;
@@ -24,6 +26,7 @@ public class Movie implements Parcelable {
     }
 
     private Movie(Parcel parcel) {
+        mId = parcel.readString();
         mTitle = parcel.readString();
         mOriginalTitle = parcel.readString();
         mPosterPath = parcel.readString();
@@ -43,6 +46,14 @@ public class Movie implements Parcelable {
             return new Movie[size];
         }
     };
+
+    public String getId() {
+        return mId;
+    }
+
+    public void setId(String id) {
+        mId = id;
+    }
 
     public String getTitle() {
         return mTitle;
@@ -95,7 +106,8 @@ public class Movie implements Parcelable {
     @NonNull
     @Override
     public String toString() {
-        return "Title: " + mTitle +
+        return "Id: " + mId +
+                "\nTitle: " + mTitle +
                 "\nOriginalTitle: " + mOriginalTitle +
                 "\nPosterPath: " + mPosterPath +
                 "\nOverview: " + mOverview +
@@ -110,6 +122,7 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mId);
         dest.writeString(mTitle);
         dest.writeString(mOriginalTitle);
         dest.writeString(mPosterPath);

@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.udacity.popularmovies.model.Movie;
+import com.udacity.popularmovies.model.MovieVideo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,12 +18,20 @@ public final class MovieJsonUtils {
 
     private static final String JSON_TAG_RESULTS = "results";
 
+    /* Movie data */
+    private static final String JSON_TAG_ID = "id";
     private static final String JSON_TAG_TITLE = "title";
     private static final String JSON_TAG_ORIGINAL_TITLE = "original_title";
     private static final String JSON_TAG_POSTER_PATH = "poster_path";
     private static final String JSON_TAG_OVERVIEW = "overview";
     private static final String JSON_TAG_VOTE_AVERAGE = "vote_average";
     private static final String JSON_TAG_RELEASE_DATE = "release_date";
+
+    /* Video data */
+    private static final String JSON_TAG_KEY = "key";
+    private static final String JSON_TAG_NAME = "name";
+    private static final String JSON_TAG_SITE = "site";
+    private static final String JSON_TAG_TYPE = "type";
 
     public static ArrayList<Movie> parseMovieJson(String json) {
         ArrayList<Movie> movieList = new ArrayList<>();
@@ -40,6 +49,7 @@ public final class MovieJsonUtils {
                 for (int i = 0; i < resultsArray.length(); i++) {
                     JSONObject resultObject = resultsArray.optJSONObject(i);
 
+                    String id = resultObject.optString(JSON_TAG_ID);
                     String title = resultObject.optString(JSON_TAG_TITLE);
                     String originalTitle = resultObject.optString(JSON_TAG_ORIGINAL_TITLE);
                     String posterPath = resultObject.optString(JSON_TAG_POSTER_PATH);
@@ -47,8 +57,8 @@ public final class MovieJsonUtils {
                     float voteAverage = (float) resultObject.optDouble(JSON_TAG_VOTE_AVERAGE);
                     String releaseDate = resultObject.optString(JSON_TAG_RELEASE_DATE);
 
-                    Movie movie = new Movie(title, originalTitle, posterPath, overview, voteAverage, releaseDate);
-                    Log.d(TAG, "[" + i + "] " + movie.toString());
+                    Movie movie = new Movie(id, title, originalTitle, posterPath, overview, voteAverage, releaseDate);
+                    Log.d(TAG, "parseMovieJson, [" + i + "] " + movie.toString());
                     movieList.add(movie);
                 }
             }
@@ -57,5 +67,38 @@ public final class MovieJsonUtils {
         }
 
         return movieList;
+    }
+
+    public static ArrayList<MovieVideo> parseVideoJson(String json) {
+        ArrayList<MovieVideo> videoList = new ArrayList<>();
+
+        if (json == null || TextUtils.isEmpty(json)) {
+            Log.e(TAG, "parseVideoJson() json string is empty.");
+            return videoList;
+        }
+
+        try {
+            JSONObject videoObject = new JSONObject(json);
+
+            JSONArray resultsArray = videoObject.optJSONArray(JSON_TAG_RESULTS);
+            if (resultsArray != null) {
+                for (int i = 0; i < resultsArray.length(); i++) {
+                    JSONObject resultObject = resultsArray.optJSONObject(i);
+
+                    String key = resultObject.optString(JSON_TAG_KEY);
+                    String name = resultObject.optString(JSON_TAG_NAME);
+                    String site = resultObject.optString(JSON_TAG_SITE);
+                    String type = resultObject.optString(JSON_TAG_TYPE);
+
+                    MovieVideo video = new MovieVideo(key, name, site, type);
+                    Log.d(TAG, "parseVideoJson, [" + i + "] " + video.toString());
+                    videoList.add(video);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return videoList;
     }
 }
