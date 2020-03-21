@@ -4,6 +4,7 @@
     android:id="@+id/tv_video_name"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/list_item_selector"
     android:drawableStart="@drawable/ic_play_arrow_black_24dp"
     android:drawableLeft="@drawable/ic_play_arrow_black_24dp"
     android:drawablePadding="@dimen/default_padding"

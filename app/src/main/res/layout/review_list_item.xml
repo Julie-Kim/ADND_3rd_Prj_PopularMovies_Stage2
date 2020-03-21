@@ -4,6 +4,7 @@
     android:id="@+id/tv_review_content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/list_item_selector"
     android:gravity="center_vertical"
     android:paddingStart="@dimen/list_item_padding_left"
     android:paddingLeft="@dimen/list_item_padding_left"

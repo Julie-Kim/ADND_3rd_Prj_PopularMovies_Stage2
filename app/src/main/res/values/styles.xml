@@ -17,6 +17,7 @@
         <item name="android:textSize">@dimen/sub_title_text_size</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:letterSpacing" tools:targetApi="lollipop">0.2</item>
     </style>
 

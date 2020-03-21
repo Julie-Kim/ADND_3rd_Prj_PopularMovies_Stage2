@@ -51,6 +51,7 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/detail_info_text_padding"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textStyle="bold"
                     tools:text="2020" />
 
@@ -60,6 +61,7 @@
                     android:layout_height="wrap_content"
                     android:padding="@dimen/detail_info_text_padding"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textStyle="bold"
                     tools:text="8/10" />
             </LinearLayout>
@@ -79,7 +81,7 @@
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/default_padding"
             android:layout_marginRight="@dimen/default_padding"
-            android:background="@android:color/darker_gray"
+            android:background="@color/divider_color"
             android:visibility="gone" />
 
         <TextView
@@ -99,7 +101,7 @@
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/default_padding"
             android:layout_marginRight="@dimen/default_padding"
-            android:background="@android:color/darker_gray"
+            android:background="@color/divider_color"
             android:visibility="gone" />
 
         <TextView
