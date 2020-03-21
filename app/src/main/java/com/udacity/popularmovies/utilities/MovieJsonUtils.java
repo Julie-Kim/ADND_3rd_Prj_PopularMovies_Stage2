@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.udacity.popularmovies.model.Movie;
+import com.udacity.popularmovies.model.MovieReview;
 import com.udacity.popularmovies.model.MovieVideo;
 
 import org.json.JSONArray;
@@ -32,6 +33,11 @@ public final class MovieJsonUtils {
     private static final String JSON_TAG_NAME = "name";
     private static final String JSON_TAG_SITE = "site";
     private static final String JSON_TAG_TYPE = "type";
+
+    /* Review data */
+    private static final String JSON_TAG_AUTHOR = "author";
+    private static final String JSON_TAG_CONTENT = "content";
+    private static final String JSON_TAG_URL = "url";
 
     public static ArrayList<Movie> parseMovieJson(String json) {
         ArrayList<Movie> movieList = new ArrayList<>();
@@ -100,5 +106,37 @@ public final class MovieJsonUtils {
         }
 
         return videoList;
+    }
+
+    public static ArrayList<MovieReview> parseReviewJson(String json) {
+        ArrayList<MovieReview> reviewList = new ArrayList<>();
+
+        if (json == null || TextUtils.isEmpty(json)) {
+            Log.e(TAG, "parseReviewJson() json string is empty.");
+            return reviewList;
+        }
+
+        try {
+            JSONObject reviewObject = new JSONObject(json);
+
+            JSONArray resultsArray = reviewObject.optJSONArray(JSON_TAG_RESULTS);
+            if (resultsArray != null) {
+                for (int i = 0; i < resultsArray.length(); i++) {
+                    JSONObject resultObject = resultsArray.optJSONObject(i);
+
+                    String author = resultObject.optString(JSON_TAG_AUTHOR);
+                    String content = resultObject.optString(JSON_TAG_CONTENT);
+                    String url = resultObject.optString(JSON_TAG_URL);
+
+                    MovieReview review = new MovieReview(author, content, url);
+                    Log.d(TAG, "parseReviewJson, [" + i + "] " + review.toString());
+                    reviewList.add(review);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return reviewList;
     }
 }
