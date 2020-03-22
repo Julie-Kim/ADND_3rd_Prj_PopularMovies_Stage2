@@ -62,7 +62,8 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
     public void onBindViewHolder(@NonNull ReviewAdapterViewHolder holder, int position) {
         MovieReview review = mReviewList.get(position);
         String reviewContent = review.getContent();
-        Log.d(TAG, "onBindViewHolder() review content: " + reviewContent.substring(0, 20));
+
+        Log.d(TAG, "onBindViewHolder() reviewContent length = " + reviewContent.length());
 
         holder.mBinding.tvReviewContent.setText(reviewContent);
     }

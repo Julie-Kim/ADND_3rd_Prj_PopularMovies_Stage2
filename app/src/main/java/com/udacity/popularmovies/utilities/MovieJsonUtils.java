@@ -3,7 +3,7 @@ package com.udacity.popularmovies.utilities;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.udacity.popularmovies.model.Movie;
+import com.udacity.popularmovies.database.MovieEntry;
 import com.udacity.popularmovies.model.MovieReview;
 import com.udacity.popularmovies.model.MovieVideo;
 
@@ -39,8 +39,8 @@ public final class MovieJsonUtils {
     private static final String JSON_TAG_CONTENT = "content";
     private static final String JSON_TAG_URL = "url";
 
-    public static ArrayList<Movie> parseMovieJson(String json) {
-        ArrayList<Movie> movieList = new ArrayList<>();
+    public static ArrayList<MovieEntry> parseMovieJson(String json) {
+        ArrayList<MovieEntry> movieList = new ArrayList<>();
 
         if (json == null || TextUtils.isEmpty(json)) {
             Log.e(TAG, "parseMovieJson() json string is empty.");
@@ -63,7 +63,7 @@ public final class MovieJsonUtils {
                     float voteAverage = (float) resultObject.optDouble(JSON_TAG_VOTE_AVERAGE);
                     String releaseDate = resultObject.optString(JSON_TAG_RELEASE_DATE);
 
-                    Movie movie = new Movie(id, title, originalTitle, posterPath, overview, voteAverage, releaseDate);
+                    MovieEntry movie = new MovieEntry(id, title, originalTitle, posterPath, overview, voteAverage, releaseDate);
                     Log.d(TAG, "parseMovieJson, [" + i + "] " + movie.toString());
                     movieList.add(movie);
                 }

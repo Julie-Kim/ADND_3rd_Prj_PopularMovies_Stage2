@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.udacity.popularmovies.database.MovieEntry;
 import com.udacity.popularmovies.databinding.MovieGridItemBinding;
-import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.utilities.MovieDataUtils;
 
 import java.util.ArrayList;
@@ -24,10 +24,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     private final MovieAdapterOnClickHandler mClickHandler;
 
     public interface MovieAdapterOnClickHandler {
-        void onClick(Movie movie);
+        void onClick(MovieEntry movie);
     }
 
-    private ArrayList<Movie> mMovieList = new ArrayList<>();
+    private ArrayList<MovieEntry> mMovieList = new ArrayList<>();
 
     MovieAdapter(MovieAdapterOnClickHandler clickHandler) {
         mClickHandler = clickHandler;
@@ -54,7 +54,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
         @Override
         public void onClick(View v) {
-            Movie movie = mMovieList.get(getAdapterPosition());
+            MovieEntry movie = mMovieList.get(getAdapterPosition());
             Log.d(TAG, "onClick(), clicked movie: " + movie.getTitle());
 
             mClickHandler.onClick(movie);
@@ -71,7 +71,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public void onBindViewHolder(@NonNull MovieAdapterViewHolder holder, int position) {
-        Movie movie = mMovieList.get(position);
+        MovieEntry movie = mMovieList.get(position);
         String posterPath = MovieDataUtils.getMoviePosterFullPath(movie.getPosterPath());
         Log.d(TAG, "onBindViewHolder() posterPath: " + posterPath);
 
@@ -106,7 +106,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         return mMovieList.size();
     }
 
-    void setMovieData(ArrayList<Movie> movieList) {
+    void setMovieData(ArrayList<MovieEntry> movieList) {
         mMovieList.clear();
         mMovieList.addAll(movieList);
 

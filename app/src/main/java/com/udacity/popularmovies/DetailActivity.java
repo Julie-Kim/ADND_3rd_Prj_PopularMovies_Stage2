@@ -18,7 +18,6 @@ import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.database.MovieDatabase;
 import com.udacity.popularmovies.database.MovieEntry;
 import com.udacity.popularmovies.databinding.ActivityDetailBinding;
-import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.model.MovieReview;
 import com.udacity.popularmovies.model.MovieVideo;
 import com.udacity.popularmovies.utilities.MovieDataUtils;
@@ -68,7 +67,7 @@ public class DetailActivity extends AppCompatActivity
             return;
         }
 
-        Movie movie = intent.getParcelableExtra(KEY_MOVIE);
+        MovieEntry movie = intent.getParcelableExtra(KEY_MOVIE);
         if (movie == null) {
             Log.e(TAG, "onCreate() movie data is null.");
             return;
@@ -106,15 +105,15 @@ public class DetailActivity extends AppCompatActivity
         return new CustomDividerItemDecoration(ContextCompat.getDrawable(this, R.drawable.recyclerview_divider));
     }
 
-    private void updateMovieDetailInfo(Movie movie) {
+    private void updateMovieDetailInfo(MovieEntry movie) {
         mBinding.tvOriginalTitle.setText(movie.getOriginalTitle());
         setMoviePoster(movie.getPosterPath());
         setMovieReleaseDate(movie.getReleaseDate());
         setVoteAverage(movie.getVoteAverage());
         mBinding.tvOverview.setText(movie.getOverview());
 
-        loadVideoData(movie.getId());
-        loadReviewData(movie.getId());
+        loadVideoData(movie.getMovieId());
+        loadReviewData(movie.getMovieId());
 
         initFavoriteMovieButton(movie);
     }
@@ -127,8 +126,8 @@ public class DetailActivity extends AppCompatActivity
         new FetchReviewDataTask(this).execute(movieId);
     }
 
-    private void initFavoriteMovieButton(Movie movie) {
-        updateFavoriteButton(movie.getId());
+    private void initFavoriteMovieButton(MovieEntry movie) {
+        updateFavoriteButton(movie.getMovieId());
 
         mBinding.favoriteButton.setOnClickListener(v -> onFavoriteButtonClicked(movie));
     }
@@ -148,14 +147,15 @@ public class DetailActivity extends AppCompatActivity
         return mDb.movieDao().existMovieByMovieId(movieId) == 1;
     }
 
-    private void onFavoriteButtonClicked(Movie movie) {
+    private void onFavoriteButtonClicked(MovieEntry movie) {
         AppExecutors.getInstance().diskIO().execute(() -> {
-            String movieId = movie.getId();
+            String movieId = movie.getMovieId();
 
             if (isFavoriteMovie(movieId)) {
                 mDb.movieDao().deleteByMovieId(movieId);
             } else {
-                mDb.movieDao().insertMovie(new MovieEntry(movie));
+                movie.setPosterImage(MovieDataUtils.getBlobImage(movie.getPosterPath()));
+                mDb.movieDao().insertMovie(movie);
             }
 
             updateFavoriteButton(movieId);

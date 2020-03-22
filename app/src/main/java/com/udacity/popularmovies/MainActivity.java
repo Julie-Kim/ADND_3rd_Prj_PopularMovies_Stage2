@@ -13,9 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.udacity.popularmovies.database.MovieEntry;
 import com.udacity.popularmovies.databinding.ActivityMainBinding;
-import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.utilities.MovieJsonUtils;
 import com.udacity.popularmovies.utilities.NetworkUtils;
 import com.udacity.popularmovies.utilities.PreferenceUtils;
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     private ActivityMainBinding mBinding;
 
     private MovieAdapter mMovieAdapter;
+
+    ViewModelProvider.Factory mViewModelFactory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +59,28 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         String sortBy = UrlUtils.getSortByParam(this);
         Log.d(TAG, "loadMovieData() sortBy " + sortBy);
 
-        new FetchMovieDataTask(this).execute(sortBy);
+        if (PreferenceUtils.FAVORITES.equals(sortBy)) {
+            setupViewModel();
+        } else {
+            new FetchMovieDataTask(this).execute(sortBy);
+        }
+    }
+
+    private void setupViewModel() {
+        if (mViewModelFactory == null) {
+            mViewModelFactory = ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication());
+        }
+        MainViewModel viewModel = new ViewModelProvider(this, mViewModelFactory).get(MainViewModel.class);
+
+        viewModel.getMovies().observe(this, movieEntries -> {
+            Log.d(TAG, "Updating list of movies from LiveData in ViewModel");
+            if (movieEntries.isEmpty()) {
+                showOrHideMovieData(false);
+            } else {
+                showOrHideMovieData(true);
+                mMovieAdapter.setMovieData(new ArrayList<>(movieEntries));
+            }
+        });
     }
 
     private void showOrHideMovieData(boolean show) {
@@ -78,14 +102,14 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     }
 
     @Override
-    public void onClick(Movie movie) {
+    public void onClick(MovieEntry movie) {
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra(DetailActivity.KEY_MOVIE, movie);
 
         startActivity(intent);
     }
 
-    private static class FetchMovieDataTask extends AsyncTask<String, Void, ArrayList<Movie>> {
+    private static class FetchMovieDataTask extends AsyncTask<String, Void, ArrayList<MovieEntry>> {
 
         private WeakReference<MainActivity> mActivityReference;
 
@@ -107,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         }
 
         @Override
-        protected ArrayList<Movie> doInBackground(String... params) {
+        protected ArrayList<MovieEntry> doInBackground(String... params) {
             if (params.length == 0) {
                 Log.e(TAG, "FetchMovieDataTask, no sortBy parameter.");
                 return null;
@@ -123,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
             String movieJsonResponse = NetworkUtils.getJsonResponse(movieRequestUrl);
             if (movieJsonResponse != null) {
-                ArrayList<Movie> movieList = MovieJsonUtils.parseMovieJson(movieJsonResponse);
+                ArrayList<MovieEntry> movieList = MovieJsonUtils.parseMovieJson(movieJsonResponse);
                 Log.d(TAG, "FetchMovieDataTask, size of movieList: " + movieList.size());
 
                 return movieList;
@@ -134,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Movie> movies) {
+        protected void onPostExecute(ArrayList<MovieEntry> movies) {
             super.onPostExecute(movies);
 
             MainActivity activity = mActivityReference.get();
@@ -147,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         }
     }
 
-    private void updateMovieData(ArrayList<Movie> movies) {
+    private void updateMovieData(ArrayList<MovieEntry> movies) {
         showOrHideLoadingIndicator(false);
 
         if (movies != null && !movies.isEmpty()) {

@@ -74,9 +74,16 @@ public class UrlUtils {
     public static String getSortByParam(Context context) {
         int value = PreferenceUtils.getSortBySettingValue(context);
 
-        if (value == 1) {
-            return PARAM_TOP_RATED;
+        switch (value) {
+            case 2:
+                return PreferenceUtils.FAVORITES;
+
+            case 1:
+                return PARAM_TOP_RATED;
+
+            case 0:
+            default:
+                return PARAM_POPULAR;
         }
-        return PARAM_POPULAR;
     }
 }

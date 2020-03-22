@@ -12,6 +12,7 @@ public final class PreferenceUtils {
     private static final String PREF_NAME = "pref";
     private static final String PREF_KEY_SORT_BY = "sort_by";
     private static final int SORT_BY_DEFAULT_VALUE = 0;
+    public static final String FAVORITES = "favorites";
 
     public static void setSortBySettingValue(Context context, int value) {
         SharedPreferences pref = context.getSharedPreferences(PREF_NAME, MODE_PRIVATE);

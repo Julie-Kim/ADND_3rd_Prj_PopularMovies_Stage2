@@ -8,7 +8,6 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 @Database(entities = {MovieEntry.class}, version = 1, exportSchema = false)
-//@TypeConverters(DateConverter.class)
 public abstract class MovieDatabase extends RoomDatabase {
 
     private static final String TAG = MovieDatabase.class.getSimpleName();

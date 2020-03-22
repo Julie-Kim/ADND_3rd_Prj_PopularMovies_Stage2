@@ -9,6 +9,7 @@
 
     <string name="most_popular">Most popular</string>
     <string name="highest_rated">Highest rated</string>
+    <string name="favorites">Favorites</string>
 
     <string name="empty_message">No movie data.</string>
 
