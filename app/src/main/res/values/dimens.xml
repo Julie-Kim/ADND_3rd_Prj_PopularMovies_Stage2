@@ -12,4 +12,5 @@
     <dimen name="sub_title_text_size">18sp</dimen>
     <dimen name="list_item_padding_left">30dp</dimen>
     <dimen name="sub_title_padding_top">30dp</dimen>
+    <dimen name="favorite_button_padding">8dp</dimen>
 </resources>

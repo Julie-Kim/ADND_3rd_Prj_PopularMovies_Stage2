@@ -16,4 +16,5 @@
 
     <string name="video">Video:</string>
     <string name="review">Review:</string>
+    <string name="mark_as_favorite">Mark as favorite</string>
 </resources>

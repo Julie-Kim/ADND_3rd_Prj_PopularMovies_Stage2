@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.udacity.popularmovies.database.MovieDatabase;
+import com.udacity.popularmovies.database.MovieEntry;
 import com.udacity.popularmovies.databinding.ActivityDetailBinding;
 import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.model.MovieReview;
@@ -40,15 +42,15 @@ public class DetailActivity extends AppCompatActivity
     private static final String TAG = DetailActivity.class.getSimpleName();
 
     public static final String KEY_MOVIE = "movie";
-
     private static final String VOTE_TOTAL = " / 10";
-
     private static final String YOUTUBE_PACKAGE = "com.google.android.youtube";
 
     private ActivityDetailBinding mBinding;
 
     private MovieVideoAdapter mVideoAdapter;
     private MovieReviewAdapter mReviewAdapter;
+
+    private MovieDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +73,8 @@ public class DetailActivity extends AppCompatActivity
             Log.e(TAG, "onCreate() movie data is null.");
             return;
         }
+
+        mDb = MovieDatabase.getInstance(this);
 
         initVideoRecyclerView();
         initReviewRecyclerView();
@@ -111,6 +115,8 @@ public class DetailActivity extends AppCompatActivity
 
         loadVideoData(movie.getId());
         loadReviewData(movie.getId());
+
+        initFavoriteMovieButton(movie);
     }
 
     private void loadVideoData(String movieId) {
@@ -119,6 +125,43 @@ public class DetailActivity extends AppCompatActivity
 
     private void loadReviewData(String movieId) {
         new FetchReviewDataTask(this).execute(movieId);
+    }
+
+    private void initFavoriteMovieButton(Movie movie) {
+        updateFavoriteButton(movie.getId());
+
+        mBinding.favoriteButton.setOnClickListener(v -> onFavoriteButtonClicked(movie));
+    }
+
+    private void updateFavoriteButton(String movieId) {
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            boolean isFavorite = isFavoriteMovie(movieId);
+            Log.d(TAG, "updateFavoriteButton() movieId: " + movieId + " -> isFavorite: " + isFavorite);
+
+            AppExecutors.getInstance().mainThread().execute(() ->
+                    mBinding.favoriteButton.setImageResource(isFavorite ?
+                            R.drawable.ic_star_red_32dp : R.drawable.ic_star_border_red_32dp));
+        });
+    }
+
+    private boolean isFavoriteMovie(String movieId) {
+        return mDb.movieDao().existMovieByMovieId(movieId) == 1;
+    }
+
+    private void onFavoriteButtonClicked(Movie movie) {
+        final MovieEntry movieEntry = new MovieEntry(movie);
+
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            String movieId = movie.getId();
+
+            if (isFavoriteMovie(movieId)) {
+                mDb.movieDao().deleteByMovieId(movieId);
+            } else {
+                mDb.movieDao().insertMovie(movieEntry);
+            }
+
+            updateFavoriteButton(movieId);
+        });
     }
 
     private void setMoviePoster(String posterPath) {
