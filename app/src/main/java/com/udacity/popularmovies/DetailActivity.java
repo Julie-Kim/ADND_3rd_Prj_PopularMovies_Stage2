@@ -149,15 +149,13 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private void onFavoriteButtonClicked(Movie movie) {
-        final MovieEntry movieEntry = new MovieEntry(movie);
-
         AppExecutors.getInstance().diskIO().execute(() -> {
             String movieId = movie.getId();
 
             if (isFavoriteMovie(movieId)) {
                 mDb.movieDao().deleteByMovieId(movieId);
             } else {
-                mDb.movieDao().insertMovie(movieEntry);
+                mDb.movieDao().insertMovie(new MovieEntry(movie));
             }
 
             updateFavoriteButton(movieId);

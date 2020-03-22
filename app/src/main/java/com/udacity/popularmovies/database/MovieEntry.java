@@ -6,6 +6,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.udacity.popularmovies.model.Movie;
+import com.udacity.popularmovies.utilities.MovieDataUtils;
 
 @Entity(tableName = "movie")
 public class MovieEntry {
@@ -40,7 +41,7 @@ public class MovieEntry {
         mMovieId = movie.getId();
         mTitle = movie.getTitle();
         mOriginalTitle = movie.getOriginalTitle();
-        //mPosterImage = mPosterImage;    //TODO
+        mPosterImage = MovieDataUtils.getBlobImage(movie.getPosterPath());
         mOverview = movie.getOverview();
         mVoteAverage = movie.getVoteAverage();
         mReleaseDate = movie.getReleaseDate();
