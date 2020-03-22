@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tv_video_name"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/list_item_selector"
-    android:drawableStart="@drawable/ic_play_arrow_black_24dp"
-    android:drawableLeft="@drawable/ic_play_arrow_black_24dp"
-    android:drawablePadding="@dimen/default_padding"
-    android:gravity="center_vertical"
-    android:paddingVertical="@dimen/default_padding"
-    android:paddingStart="@dimen/list_item_padding_left"
-    android:paddingLeft="@dimen/list_item_padding_left"
-    android:paddingEnd="@dimen/default_padding"
-    android:paddingRight="@dimen/default_padding"
-    tools:text="Video 1" />
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/tv_video_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/list_item_selector"
+        android:drawableStart="@drawable/ic_play_arrow_black_24dp"
+        android:drawableLeft="@drawable/ic_play_arrow_black_24dp"
+        android:drawablePadding="@dimen/default_padding"
+        android:gravity="center_vertical"
+        android:paddingVertical="@dimen/default_padding"
+        android:paddingStart="@dimen/list_item_padding_left"
+        android:paddingLeft="@dimen/list_item_padding_left"
+        android:paddingEnd="@dimen/default_padding"
+        android:paddingRight="@dimen/default_padding"
+        tools:text="Video 1" />
+</layout>

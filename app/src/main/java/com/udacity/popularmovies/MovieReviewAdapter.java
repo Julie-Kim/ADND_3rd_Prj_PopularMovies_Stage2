@@ -4,17 +4,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.udacity.popularmovies.databinding.ReviewListItemBinding;
 import com.udacity.popularmovies.model.MovieReview;
 
 import java.util.ArrayList;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.ReviewAdapterViewHolder> {
 
@@ -28,18 +26,17 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
 
     private ArrayList<MovieReview> mReviewList = new ArrayList<>();
 
-    public MovieReviewAdapter(ReviewAdapterOnClickHandler clickHandler) {
+    MovieReviewAdapter(ReviewAdapterOnClickHandler clickHandler) {
         mClickHandler = clickHandler;
     }
 
     public class ReviewAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.tv_review_content)
-        TextView mReviewContentText;
+        private ReviewListItemBinding mBinding;
 
         ReviewAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            mBinding = DataBindingUtil.bind(itemView);
 
             itemView.setOnClickListener(this);
         }
@@ -67,7 +64,7 @@ public class MovieReviewAdapter extends RecyclerView.Adapter<MovieReviewAdapter.
         String reviewContent = review.getContent();
         Log.d(TAG, "onBindViewHolder() review content: " + reviewContent.substring(0, 20));
 
-        holder.mReviewContentText.setText(reviewContent);
+        holder.mBinding.tvReviewContent.setText(reviewContent);
     }
 
     @Override

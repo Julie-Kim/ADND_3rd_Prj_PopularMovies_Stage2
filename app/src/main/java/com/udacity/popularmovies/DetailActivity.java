@@ -7,17 +7,15 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.udacity.popularmovies.databinding.ActivityDetailBinding;
 import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.model.MovieReview;
 import com.udacity.popularmovies.model.MovieVideo;
@@ -35,9 +33,6 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class DetailActivity extends AppCompatActivity
         implements MovieVideoAdapter.VideoAdapterOnClickHandler,
         MovieReviewAdapter.ReviewAdapterOnClickHandler {
@@ -50,41 +45,7 @@ public class DetailActivity extends AppCompatActivity
 
     private static final String YOUTUBE_PACKAGE = "com.google.android.youtube";
 
-    @BindView(R.id.tv_original_title)
-    TextView mOriginalTitle;
-
-    @BindView(R.id.iv_poster_image)
-    ImageView mPosterImage;
-
-    @BindView(R.id.pb_image_loading_indicator)
-    ProgressBar mImageLoadingIndicator;
-
-    @BindView(R.id.tv_released_year)
-    TextView mReleasedYear;
-
-    @BindView(R.id.tv_vote_average)
-    TextView mVoteAverage;
-
-    @BindView(R.id.tv_overview)
-    TextView mOverview;
-
-    @BindView(R.id.videos_divider)
-    View mVideosDivider;
-
-    @BindView(R.id.tv_videos_title)
-    TextView mVideosTitle;
-
-    @BindView(R.id.rv_videos)
-    RecyclerView mVideosRecyclerView;
-
-    @BindView(R.id.reviews_divider)
-    View mReviewsDivider;
-
-    @BindView(R.id.tv_reviews_title)
-    TextView mReviewsTitle;
-
-    @BindView(R.id.rv_reviews)
-    RecyclerView mReviewsRecyclerView;
+    private ActivityDetailBinding mBinding;
 
     private MovieVideoAdapter mVideoAdapter;
     private MovieReviewAdapter mReviewAdapter;
@@ -92,8 +53,7 @@ public class DetailActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
-        ButterKnife.bind(this);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -118,24 +78,24 @@ public class DetailActivity extends AppCompatActivity
         updateMovieDetailInfo(movie);
     }
 
-    private void initReviewRecyclerView() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mReviewsRecyclerView.setLayoutManager(layoutManager);
-        mReviewsRecyclerView.setHasFixedSize(true);
-
-        mReviewAdapter = new MovieReviewAdapter(this);
-        mReviewsRecyclerView.setAdapter(mReviewAdapter);
-        mReviewsRecyclerView.addItemDecoration(getDividerItemDecoration());
-    }
-
     private void initVideoRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mVideosRecyclerView.setLayoutManager(layoutManager);
-        mVideosRecyclerView.setHasFixedSize(true);
+        mBinding.rvVideos.setLayoutManager(layoutManager);
+        mBinding.rvVideos.setHasFixedSize(true);
 
         mVideoAdapter = new MovieVideoAdapter(this);
-        mVideosRecyclerView.setAdapter(mVideoAdapter);
-        mVideosRecyclerView.addItemDecoration(getDividerItemDecoration());
+        mBinding.rvVideos.setAdapter(mVideoAdapter);
+        mBinding.rvVideos.addItemDecoration(getDividerItemDecoration());
+    }
+
+    private void initReviewRecyclerView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mBinding.rvReviews.setLayoutManager(layoutManager);
+        mBinding.rvReviews.setHasFixedSize(true);
+
+        mReviewAdapter = new MovieReviewAdapter(this);
+        mBinding.rvReviews.setAdapter(mReviewAdapter);
+        mBinding.rvReviews.addItemDecoration(getDividerItemDecoration());
     }
 
     private CustomDividerItemDecoration getDividerItemDecoration() {
@@ -143,11 +103,11 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private void updateMovieDetailInfo(Movie movie) {
-        mOriginalTitle.setText(movie.getOriginalTitle());
+        mBinding.tvOriginalTitle.setText(movie.getOriginalTitle());
         setMoviePoster(movie.getPosterPath());
         setMovieReleaseDate(movie.getReleaseDate());
         setVoteAverage(movie.getVoteAverage());
-        mOverview.setText(movie.getOverview());
+        mBinding.tvOverview.setText(movie.getOverview());
 
         loadVideoData(movie.getId());
         loadReviewData(movie.getId());
@@ -172,7 +132,7 @@ public class DetailActivity extends AppCompatActivity
                 .fit()
                 .noPlaceholder()
                 .error(R.drawable.error_image)
-                .into(mPosterImage, new Callback() {
+                .into(mBinding.movieThumbnail.ivPosterImage, new Callback() {
                             @Override
                             public void onSuccess() {
                                 showOrHideLoadingIndicator(false);
@@ -188,9 +148,9 @@ public class DetailActivity extends AppCompatActivity
 
     private void showOrHideLoadingIndicator(boolean show) {
         if (show) {
-            mImageLoadingIndicator.setVisibility(View.VISIBLE);
+            mBinding.movieThumbnail.pbImageLoadingIndicator.setVisibility(View.VISIBLE);
         } else {
-            mImageLoadingIndicator.setVisibility(View.INVISIBLE);
+            mBinding.movieThumbnail.pbImageLoadingIndicator.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -206,12 +166,12 @@ public class DetailActivity extends AppCompatActivity
             e.printStackTrace();
         }
 
-        mReleasedYear.setText(releaseDate);
+        mBinding.tvReleasedYear.setText(releaseDate);
     }
 
     private void setVoteAverage(float voteAverage) {
         String vote = voteAverage + VOTE_TOTAL;
-        mVoteAverage.setText(vote);
+        mBinding.tvVoteAverage.setText(vote);
     }
 
     @Override
@@ -306,11 +266,11 @@ public class DetailActivity extends AppCompatActivity
 
     private void showOrHideVideosView(boolean show) {
         if (show) {
-            mVideosDivider.setVisibility(View.VISIBLE);
-            mVideosTitle.setVisibility(View.VISIBLE);
+            mBinding.videosDivider.setVisibility(View.VISIBLE);
+            mBinding.tvVideosTitle.setVisibility(View.VISIBLE);
         } else {
-            mVideosDivider.setVisibility(View.GONE);
-            mVideosTitle.setVisibility(View.GONE);
+            mBinding.videosDivider.setVisibility(View.GONE);
+            mBinding.tvVideosTitle.setVisibility(View.GONE);
         }
     }
 
@@ -375,11 +335,11 @@ public class DetailActivity extends AppCompatActivity
 
     private void showOrHideReviewView(boolean show) {
         if (show) {
-            mReviewsDivider.setVisibility(View.VISIBLE);
-            mReviewsTitle.setVisibility(View.VISIBLE);
+            mBinding.reviewsDivider.setVisibility(View.VISIBLE);
+            mBinding.tvReviewsTitle.setVisibility(View.VISIBLE);
         } else {
-            mReviewsDivider.setVisibility(View.GONE);
-            mReviewsTitle.setVisibility(View.GONE);
+            mBinding.reviewsDivider.setVisibility(View.GONE);
+            mBinding.tvReviewsTitle.setVisibility(View.GONE);
         }
     }
 }

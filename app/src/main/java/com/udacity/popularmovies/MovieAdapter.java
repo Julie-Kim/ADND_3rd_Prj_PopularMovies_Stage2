@@ -4,21 +4,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.udacity.popularmovies.databinding.MovieGridItemBinding;
 import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.utilities.MovieDataUtils;
 
 import java.util.ArrayList;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
@@ -38,24 +35,20 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     public class MovieAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.iv_poster_image)
-        ImageView mMovieImageView;
-
-        @BindView(R.id.pb_image_loading_indicator)
-        ProgressBar mImageLoadingIndicator;
+        private MovieGridItemBinding mBinding;
 
         MovieAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            mBinding = DataBindingUtil.bind(itemView);
 
             itemView.setOnClickListener(this);
         }
 
         void showOrHideLoadingIndicator(boolean show) {
             if (show) {
-                mImageLoadingIndicator.setVisibility(View.VISIBLE);
+                mBinding.pbImageLoadingIndicator.setVisibility(View.VISIBLE);
             } else {
-                mImageLoadingIndicator.setVisibility(View.INVISIBLE);
+                mBinding.pbImageLoadingIndicator.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -89,7 +82,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
                 .fit()
                 .noPlaceholder()
                 .error(R.drawable.error_image)
-                .into(holder.mMovieImageView, new Callback() {
+                .into(holder.mBinding.ivPosterImage, new Callback() {
                             @Override
                             public void onSuccess() {
                                 holder.showOrHideLoadingIndicator(false);
@@ -102,7 +95,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
                         }
                 );
 
-        holder.mMovieImageView.setContentDescription(movie.getTitle());
+        holder.mBinding.ivPosterImage.setContentDescription(movie.getTitle());
     }
 
     @Override

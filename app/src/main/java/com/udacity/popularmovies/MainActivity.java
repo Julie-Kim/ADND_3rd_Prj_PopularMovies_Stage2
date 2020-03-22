@@ -8,14 +8,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.databinding.DataBindingUtil;
 
+import com.udacity.popularmovies.databinding.ActivityMainBinding;
 import com.udacity.popularmovies.model.Movie;
 import com.udacity.popularmovies.utilities.MovieJsonUtils;
 import com.udacity.popularmovies.utilities.NetworkUtils;
@@ -26,38 +25,27 @@ import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int DEFAULT_POSTER_WIDTH = 540;
 
-    @BindView(R.id.rv_movie_poster)
-    RecyclerView mMovieRecyclerView;
+    private ActivityMainBinding mBinding;
 
     private MovieAdapter mMovieAdapter;
-
-    @BindView(R.id.tv_empty_message)
-    TextView mEmptyMessage;
-
-    @BindView(R.id.pb_loading_indicator)
-    ProgressBar mLoadingIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         AutoFitGridLayoutManager layoutManager = new AutoFitGridLayoutManager(this, DEFAULT_POSTER_WIDTH);
-        mMovieRecyclerView.setLayoutManager(layoutManager);
-        mMovieRecyclerView.setHasFixedSize(true);
+        mBinding.rvMoviePoster.setLayoutManager(layoutManager);
+        mBinding.rvMoviePoster.setHasFixedSize(true);
 
         mMovieAdapter = new MovieAdapter(this);
-        mMovieRecyclerView.setAdapter(mMovieAdapter);
+        mBinding.rvMoviePoster.setAdapter(mMovieAdapter);
 
         loadMovieData();
     }
@@ -73,19 +61,19 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     private void showOrHideMovieData(boolean show) {
         if (show) {
-            mEmptyMessage.setVisibility(View.INVISIBLE);
-            mMovieRecyclerView.setVisibility(View.VISIBLE);
+            mBinding.tvEmptyMessage.setVisibility(View.INVISIBLE);
+            mBinding.rvMoviePoster.setVisibility(View.VISIBLE);
         } else {
-            mMovieRecyclerView.setVisibility(View.INVISIBLE);
-            mEmptyMessage.setVisibility(View.VISIBLE);
+            mBinding.rvMoviePoster.setVisibility(View.INVISIBLE);
+            mBinding.tvEmptyMessage.setVisibility(View.VISIBLE);
         }
     }
 
     private void showOrHideLoadingIndicator(boolean show) {
         if (show) {
-            mLoadingIndicator.setVisibility(View.VISIBLE);
+            mBinding.pbLoadingIndicator.setVisibility(View.VISIBLE);
         } else {
-            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            mBinding.pbLoadingIndicator.setVisibility(View.INVISIBLE);
         }
     }
 

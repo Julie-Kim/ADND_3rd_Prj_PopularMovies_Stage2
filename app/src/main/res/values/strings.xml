@@ -14,6 +14,6 @@
 
     <string name="ok">OK</string>
 
-    <string name="videos">Videos:</string>
-    <string name="reviews">Reviews:</string>
+    <string name="video">Video:</string>
+    <string name="review">Review:</string>
 </resources>

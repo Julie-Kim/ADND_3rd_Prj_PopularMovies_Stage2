@@ -4,17 +4,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.udacity.popularmovies.databinding.VideoListItemBinding;
 import com.udacity.popularmovies.model.MovieVideo;
 
 import java.util.ArrayList;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.VideoAdapterViewHolder> {
 
@@ -34,12 +32,11 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Vi
 
     public class VideoAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.tv_video_name)
-        TextView mVideoNameText;
+        private VideoListItemBinding mBinding;
 
         VideoAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            mBinding = DataBindingUtil.bind(itemView);
 
             itemView.setOnClickListener(this);
         }
@@ -67,7 +64,7 @@ public class MovieVideoAdapter extends RecyclerView.Adapter<MovieVideoAdapter.Vi
         String videoName = video.getName();
         Log.d(TAG, "onBindViewHolder() video name: " + videoName);
 
-        holder.mVideoNameText.setText(videoName);
+        holder.mBinding.tvVideoName.setText(videoName);
     }
 
     @Override
