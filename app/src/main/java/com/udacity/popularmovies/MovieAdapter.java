@@ -55,7 +55,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         @Override
         public void onClick(View v) {
             MovieEntry movie = mMovieList.get(getAdapterPosition());
-            Log.d(TAG, "onClick(), clicked movie: " + movie.getTitle());
+            Log.d(TAG, "onClick(), clicked movie: " + movie.getTitle() + ", _id: " + movie.getId());
 
             mClickHandler.onClick(movie);
         }
@@ -72,6 +72,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
     @Override
     public void onBindViewHolder(@NonNull MovieAdapterViewHolder holder, int position) {
         MovieEntry movie = mMovieList.get(position);
+        byte[] posterImage = movie.getPosterImage();
+
+        if (posterImage != null && posterImage.length > 0) {
+            Log.d(TAG, "onBindViewHolder() load from image bitmap");
+
+            holder.mBinding.ivPosterImage.setImageBitmap(MovieDataUtils.getBitmapFromBlob(posterImage));
+            return;
+        }
+
         String posterPath = MovieDataUtils.getMoviePosterFullPath(movie.getPosterPath());
         Log.d(TAG, "onBindViewHolder() posterPath: " + posterPath);
 

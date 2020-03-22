@@ -162,7 +162,8 @@ public class MovieEntry implements Parcelable {
     @NonNull
     @Override
     public String toString() {
-        return "MovieId: " + mMovieId +
+        return "_id: " + mId +
+                "\nMovieId: " + mMovieId +
                 "\nTitle: " + mTitle +
                 "\nOriginalTitle: " + mOriginalTitle +
                 "\nPosterPath: " + mPosterPath +

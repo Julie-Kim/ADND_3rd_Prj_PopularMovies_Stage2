@@ -11,6 +11,8 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.squareup.picasso.Callback;
@@ -41,6 +43,7 @@ public class DetailActivity extends AppCompatActivity
     private static final String TAG = DetailActivity.class.getSimpleName();
 
     public static final String KEY_MOVIE = "movie";
+    public static final String KEY_IS_FAVORITES = "is_favorites";
     private static final String VOTE_TOTAL = " / 10";
     private static final String YOUTUBE_PACKAGE = "com.google.android.youtube";
 
@@ -73,12 +76,27 @@ public class DetailActivity extends AppCompatActivity
             return;
         }
 
-        mDb = MovieDatabase.getInstance(this);
-
         initVideoRecyclerView();
         initReviewRecyclerView();
 
-        updateMovieDetailInfo(movie);
+        mDb = MovieDatabase.getInstance(this);
+
+        if (intent.getBooleanExtra(KEY_IS_FAVORITES, false)) {
+            MovieViewModelFactory factory = new MovieViewModelFactory(mDb, movie.getId());
+            final MovieViewModel viewModel = new ViewModelProvider(this, factory).get(MovieViewModel.class);
+            viewModel.getMovie().observe(this, new Observer<MovieEntry>() {
+                @Override
+                public void onChanged(MovieEntry movieEntry) {
+                    viewModel.getMovie().removeObserver(this);
+
+                    Log.d(TAG, "onCreate() load movie data from database.");
+                    updateMovieDetailInfo(movieEntry);
+                }
+            });
+        } else {
+            Log.d(TAG, "onCreate() load movie data from extra.");
+            updateMovieDetailInfo(movie);
+        }
     }
 
     private void initVideoRecyclerView() {
@@ -107,7 +125,7 @@ public class DetailActivity extends AppCompatActivity
 
     private void updateMovieDetailInfo(MovieEntry movie) {
         mBinding.tvOriginalTitle.setText(movie.getOriginalTitle());
-        setMoviePoster(movie.getPosterPath());
+        setMoviePoster(movie.getPosterPath(), movie.getPosterImage());
         setMovieReleaseDate(movie.getReleaseDate());
         setVoteAverage(movie.getVoteAverage());
         mBinding.tvOverview.setText(movie.getOverview());
@@ -162,7 +180,14 @@ public class DetailActivity extends AppCompatActivity
         });
     }
 
-    private void setMoviePoster(String posterPath) {
+    private void setMoviePoster(String posterPath, byte[] posterImage) {
+        if (posterImage != null && posterImage.length > 0) {
+            Log.d(TAG, "setMoviePoster() load from image bitmap");
+
+            mBinding.movieThumbnail.ivPosterImage.setImageBitmap(MovieDataUtils.getBitmapFromBlob(posterImage));
+            return;
+        }
+
         String fullPath = MovieDataUtils.getMoviePosterFullPath(posterPath);
         Log.d(TAG, "setMoviePoster() fullPath: " + fullPath);
 

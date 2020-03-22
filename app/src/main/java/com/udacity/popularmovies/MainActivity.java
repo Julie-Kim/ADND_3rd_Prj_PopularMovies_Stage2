@@ -59,11 +59,19 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         String sortBy = UrlUtils.getSortByParam(this);
         Log.d(TAG, "loadMovieData() sortBy " + sortBy);
 
-        if (PreferenceUtils.FAVORITES.equals(sortBy)) {
+        if (isSortByFavorites(sortBy)) {
             setupViewModel();
         } else {
             new FetchMovieDataTask(this).execute(sortBy);
         }
+    }
+
+    private boolean isSortByFavorites(String sortBy) {
+        return PreferenceUtils.FAVORITES.equals(sortBy);
+    }
+
+    private boolean isSortByFavorites() {
+        return isSortByFavorites(UrlUtils.getSortByParam(this));
     }
 
     private void setupViewModel() {
@@ -74,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
         viewModel.getMovies().observe(this, movieEntries -> {
             Log.d(TAG, "Updating list of movies from LiveData in ViewModel");
+
             if (movieEntries.isEmpty()) {
                 showOrHideMovieData(false);
             } else {
@@ -104,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     @Override
     public void onClick(MovieEntry movie) {
         Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(DetailActivity.KEY_IS_FAVORITES, isSortByFavorites());
         intent.putExtra(DetailActivity.KEY_MOVIE, movie);
 
         startActivity(intent);
